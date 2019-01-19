@@ -1,0 +1,20 @@
+<html>
+
+<head>
+    <script src="./dist/index.js"></script>
+    <script>
+        function scan(target) {
+            const out = document.getElementById("out");
+            window["QrcodeScannerButton"].click().then(res => {
+                out.innerText = res;
+            });
+        }
+    </script>
+</head>
+
+<body>
+    <button onclick="scan()">scan</button>
+    <div id="out"></div>
+</body>
+
+</html>
