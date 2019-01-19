@@ -39,7 +39,7 @@ function click() {
             canvas.width = video.videoWidth * 0.3;
             canvas.height = video.videoHeight * 0.2;
             ctx.drawImage(video, video.videoWidth * 0.3, video.videoHeight * 0.2, video.videoWidth * 0.3, video.videoHeight * 0.2, 0, 0, video.videoWidth * 0.3, video.videoHeight * 0.2);
-            var image = ctx.getImageData(0, 0, video.videoWidth * 0.3, video.videoHeight * 0.2);
+            //var image = ctx.getImageData(0, 0, video.videoWidth * 0.3, video.videoHeight * 0.2);
             const luminanceSource = new HTMLCanvasElementLuminanceSource(canvas);
             const binaryBitmap = new BinaryBitmap(
                 new HybridBinarizer(luminanceSource)
