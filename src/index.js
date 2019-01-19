@@ -63,7 +63,7 @@ function click() {
 }
 
 function bind(element) {
-    document.body.appendChild(screen);
+    element.appendChild(screen);
 }
 
 export { click, bind };
