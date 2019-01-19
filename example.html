@@ -19,14 +19,15 @@
             }
         }
         function fullscreen() {
-            let rfs = (screen.requestFullscreen
-                || screen.webkitRequestFullScreen
-                || screen.mozRequestFullScreen
-                || screen.msRequestFullscreen)
+            const handler = document.getElementById("bind");
+            let rfs = (handler.requestFullscreen
+                || handler.webkitRequestFullScreen
+                || handler.mozRequestFullScreen
+                || handler.msRequestFullscreen)
             if (rfs === undefined) {
                 err("requestFullscreen is undefined");
             }
-            rfs.call(screen)
+            rfs.call(handler)
         }
     </script>
 
