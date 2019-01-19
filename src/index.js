@@ -56,7 +56,11 @@ function click() {
                 if (rfs === undefined) {
                     err("requestFullscreen is undefined");
                 }
-                rfs.call(screen)
+                try {
+                    rfs.call(screen)
+                } catch (e) {
+                    err(e)
+                }
             })
             .catch(e => { err(e) });
     })
