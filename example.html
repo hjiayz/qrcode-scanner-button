@@ -20,14 +20,20 @@
         }
         function fullscreen() {
             const handler = document.getElementById("bind");
-            let rfs = (handler.requestFullscreen
-                || handler.webkitRequestFullScreen
-                || handler.mozRequestFullScreen
-                || handler.msRequestFullscreen)
-            if (rfs === undefined) {
-                err("requestFullscreen is undefined");
+            const err = document.getElementById("err");
+            try {
+                let rfs = (handler.requestFullscreen
+                    || handler.webkitRequestFullScreen
+                    || handler.mozRequestFullScreen
+                    || handler.msRequestFullscreen)
+                if (rfs === undefined) {
+                    err("requestFullscreen is undefined");
+                }
+                rfs.call(handler)
             }
-            rfs.call(handler)
+            catch (e) {
+                err.innerText = e.toString();
+            }
         }
     </script>
 
