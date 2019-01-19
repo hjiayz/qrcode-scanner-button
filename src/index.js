@@ -1,11 +1,14 @@
 import { QRCodeReader, HTMLCanvasElementLuminanceSource, BinaryBitmap, HybridBinarizer } from '@zxing/library';
-import 'fullscreen-polyfill';
-
-function close() {
-    document.exitFullscreen();
-}
 
 var screen = document.createElement("div");
+
+function close() {
+    (document.exitFullscreen ||
+        document.msExitFullscreen ||
+        document.mozCancelFullScreen ||
+        document.webkitExitFullscreen).call(document);
+}
+
 
 let video = document.createElement("Video");
 
@@ -14,16 +17,20 @@ let canvas = document.createElement("canvas");
 screen.appendChild(video);
 screen.appendChild(canvas);
 screen.addEventListener("click", close, false);
+document.addEventListener("load", () => {
+    document.body.appendChild(screen);
+}, false);
+const codeReader = new QRCodeReader();
 
 function click() {
     return new Promise((res, err) => {
         var timer;
         var ctx = canvas.getContext("2d");
         let computeFrame = () => {
-            canvas.width = myvideo.videoWidth * 0.3;
-            canvas.height = myvideo.videoHeight * 0.2;
+            canvas.width = video.videoWidth * 0.3;
+            canvas.height = video.videoHeight * 0.2;
             ctx.drawImage(video, video.videoWidth * 0.3, video.videoHeight * 0.2, video.videoWidth * 0.3, video.videoHeight * 0.2, 0, 0, video.videoWidth * 0.3, video.videoHeight * 0.2);
-            var image = ctx.getImageData(0, 0, myvideo.videoWidth * 0.3, myvideo.videoHeight * 0.2);
+            var image = ctx.getImageData(0, 0, video.videoWidth * 0.3, video.videoHeight * 0.2);
             const luminanceSource = new HTMLCanvasElementLuminanceSource(canvas);
             const binaryBitmap = new BinaryBitmap(
                 new HybridBinarizer(luminanceSource)
@@ -31,7 +38,12 @@ function click() {
             let result = codeReader.decode(binaryBitmap);
             if (!!result.text) {
                 window.clearInterval(timer);
-                close();
+                try {
+                    close();
+                }
+                catch (e) {
+                    alert(e);
+                }
                 res(result.text);
             }
         }
@@ -40,10 +52,17 @@ function click() {
                 video.srcObject = vsrc;
                 video.play();
                 timer = window.window.setInterval(computeFrame, 100);
-                screen.requestFullscreen();
+                (screen.requestFullscreen
+                    || screen.webkitRequestFullScreen
+                    || screen.mozRequestFullScreen
+                    || screen.msRequestFullscreen).call(screen)
             })
-            .catch(e => { close(); err(e) });
+            .catch(e => { err(e) });
     })
 }
 
-export { click };
+function bind(element) {
+    document.body.appendChild(screen);
+}
+
+export { click, bind };

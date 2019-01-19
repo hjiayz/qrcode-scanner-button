@@ -5,16 +5,37 @@
     <script>
         function scan(target) {
             const out = document.getElementById("out");
-            window["QrcodeScannerButton"].click().then(res => {
-                out.innerText = res;
-            });
+            const err = document.getElementById("err");
+            try {
+                window["QrcodeScannerButton"].click().then(res => {
+                    out.innerText = res;
+                })
+                    .catch(e => {
+                        err.innerText = e.toString();
+                    })
+            }
+            catch (e) {
+                err.innerText = e.toString();
+            }
         }
     </script>
+
 </head>
 
 <body>
     <button onclick="scan()">scan</button>
     <div id="out"></div>
+    <div id="err"></div>
+    <div id="bind"></div>
 </body>
+<script>
+    try {
+        const err = document.getElementById("err");
+        const handler = document.getElementById("bind");
+        window["QrcodeScannerButton"].bind(handler);
+    } catch (e) {
+        err.innerText = e.toString();
+    }
+</script>
 
 </html>
