@@ -18,23 +18,6 @@
                 err.innerText = e.toString();
             }
         }
-        function fullscreen() {
-            const handler = document.getElementById("bind");
-            const err = document.getElementById("err");
-            try {
-                let rfs = (handler.requestFullscreen
-                    || handler.webkitRequestFullScreen
-                    || handler.mozRequestFullScreen
-                    || handler.msRequestFullscreen)
-                if (rfs === undefined) {
-                    err("requestFullscreen is undefined");
-                }
-                rfs.call(handler)
-            }
-            catch (e) {
-                err.innerText = e.toString();
-            }
-        }
     </script>
 
 </head>
@@ -44,7 +27,6 @@
     <div id="out"></div>
     <div id="err"></div>
     <div id="bind"></div>
-    <button onclick="fullscreen()">fullscreen</button>
 </body>
 <script>
     try {
