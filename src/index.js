@@ -24,6 +24,9 @@ function click() {
         || screen.webkitRequestFullScreen
         || screen.mozRequestFullScreen
         || screen.msRequestFullscreen)
+    if (rfs === undefined) {
+        alert("requestFullscreen is undefined");
+    }
     try {
         rfs.call(screen).then({}).catch(err => {
             alert(`Error attempting to enable full-screen mode: ${err.message} (${err.name})`);
