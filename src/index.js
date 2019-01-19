@@ -57,7 +57,9 @@ function click() {
                     err("requestFullscreen is undefined");
                 }
                 try {
-                    rfs.call(screen)
+                    rfs.call(screen).then({}).catch(err => {
+                        alert(`Error attempting to enable full-screen mode: ${err.message} (${err.name})`);
+                    });
                 } catch (e) {
                     err(e)
                 }
