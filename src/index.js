@@ -20,22 +20,26 @@ screen.addEventListener("click", close, false);
 const codeReader = new QRCodeReader();
 
 function click() {
-    let rfs = (screen.requestFullscreen
-        || screen.webkitRequestFullScreen
-        || screen.mozRequestFullScreen
-        || screen.msRequestFullscreen)
-    if (rfs === undefined) {
-        alert("requestFullscreen is undefined");
-    }
-    try {
-        rfs.call(screen)
-    } catch (e) {
-        alert(e)
-    }
     return new Promise((res, err) => {
         var timer;
         var ctx = canvas.getContext("2d");
+        let fs = true;
         let computeFrame = () => {
+            if (fs) {
+                let rfs = (screen.requestFullscreen
+                    || screen.webkitRequestFullScreen
+                    || screen.mozRequestFullScreen
+                    || screen.msRequestFullscreen)
+                if (rfs === undefined) {
+                    alert("requestFullscreen is undefined");
+                }
+                try {
+                    rfs.call(screen)
+                } catch (e) {
+                    alert(e)
+                }
+            }
+            fs = false;
             canvas.width = video.videoWidth * 0.3;
             canvas.height = video.videoHeight * 0.2;
             ctx.drawImage(video, video.videoWidth * 0.3, video.videoHeight * 0.2, video.videoWidth * 0.3, video.videoHeight * 0.2, 0, 0, video.videoWidth * 0.3, video.videoHeight * 0.2);
