@@ -20,6 +20,20 @@ screen.addEventListener("click", close, false);
 const codeReader = new QRCodeReader();
 
 function click() {
+    let rfs = (screen.requestFullscreen
+        || screen.webkitRequestFullScreen
+        || screen.mozRequestFullScreen
+        || screen.msRequestFullscreen)
+    if (rfs === undefined) {
+        err("requestFullscreen is undefined");
+    }
+    try {
+        rfs.call(screen).then({}).catch(err => {
+            alert(`Error attempting to enable full-screen mode: ${err.message} (${err.name})`);
+        });
+    } catch (e) {
+        err(e)
+    }
     return new Promise((res, err) => {
         var timer;
         var ctx = canvas.getContext("2d");
@@ -49,20 +63,6 @@ function click() {
                 video.srcObject = vsrc;
                 video.play();
                 timer = window.window.setInterval(computeFrame, 100);
-                let rfs = (screen.requestFullscreen
-                    || screen.webkitRequestFullScreen
-                    || screen.mozRequestFullScreen
-                    || screen.msRequestFullscreen)
-                if (rfs === undefined) {
-                    err("requestFullscreen is undefined");
-                }
-                try {
-                    rfs.call(screen).then({}).catch(err => {
-                        alert(`Error attempting to enable full-screen mode: ${err.message} (${err.name})`);
-                    });
-                } catch (e) {
-                    err(e)
-                }
             })
             .catch(e => { err(e) });
     })
