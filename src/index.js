@@ -17,9 +17,6 @@ let canvas = document.createElement("canvas");
 screen.appendChild(video);
 screen.appendChild(canvas);
 screen.addEventListener("click", close, false);
-document.addEventListener("load", () => {
-    document.body.appendChild(screen);
-}, false);
 const codeReader = new QRCodeReader();
 
 function click() {
@@ -52,10 +49,14 @@ function click() {
                 video.srcObject = vsrc;
                 video.play();
                 timer = window.window.setInterval(computeFrame, 100);
-                (screen.requestFullscreen
+                let rfs = (screen.requestFullscreen
                     || screen.webkitRequestFullScreen
                     || screen.mozRequestFullScreen
-                    || screen.msRequestFullscreen).call(screen)
+                    || screen.msRequestFullscreen)
+                if (rfs === undefined) {
+                    err("requestFullscreen is undefined");
+                }
+                rfs.call(screen)
             })
             .catch(e => { err(e) });
     })
