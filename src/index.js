@@ -1,64 +1,79 @@
 import { QRCodeReader, HTMLCanvasElementLuminanceSource, BinaryBitmap, HybridBinarizer } from '@zxing/library';
 
 var screen = document.createElement("div");
+screen.style.display = "none";
+screen.style.width = "100%";
+screen.style.height = "100%";
+screen.style.justifyContent = "center";
+screen.style.alignItems = "center";
+
+var timer;
+
+let video = document.createElement("Video");
+video.style.width = 0;
+video.style.height = 0;
+video.style.position = "absolute";
+video.style.zIndex = 0;
+video.style.objectFit = "fill";
+
+let mask = document.createElement("div");
+mask.style.zIndex = 20;
+mask.style.position = "absolute";
+mask.style.backgroundColor = "rgba(0, 0, 0, 0.5)";
+mask.style.overflow = "hidden";
+mask.style.height = "100%";
+mask.style.width = "100%";
+
+let canvas = document.createElement("canvas");
+canvas.style.width = "30%";
+canvas.style.height = "30%";
+canvas.style.zIndex = 40;
+canvas.style.position = "absolute";
+canvas.style.backgroundColor = "white";
+canvas.style.border = "1px solid green";
 
 function close() {
+    window.clearInterval(timer);
+    video.srcObject = null;
+    screen.style.display = "none";
     (document.exitFullscreen ||
         document.msExitFullscreen ||
         document.mozCancelFullScreen ||
         document.webkitExitFullscreen).call(document);
 }
 
-
-let video = document.createElement("Video");
-
-let canvas = document.createElement("canvas");
-
 screen.appendChild(video);
+screen.appendChild(mask);
 screen.appendChild(canvas);
 screen.addEventListener("click", close, false);
 const codeReader = new QRCodeReader();
 
 function click() {
+    let rfs = (screen.requestFullscreen
+        || screen.webkitRequestFullScreen
+        || screen.mozRequestFullScreen
+        || screen.msRequestFullscreen)
+    if (rfs !== undefined) {
+        rfs.call(screen)
+    }
+    screen.style.display = "flex";
     return new Promise((res, err) => {
-        var timer;
         var ctx = canvas.getContext("2d");
-        let fs = true;
         let computeFrame = () => {
-            if (document.fullscreenElement ||
-                document.mozFullScreenElement ||
-                document.webkitFullscreenElement) {
-                let rfs = (screen.requestFullscreen
-                    || screen.webkitRequestFullScreen
-                    || screen.mozRequestFullScreen
-                    || screen.msRequestFullscreen)
-                if (rfs === undefined) {
-                    alert("requestFullscreen is undefined");
-                }
-                try {
-                    rfs.call(screen)
-                } catch (e) {
-                    alert(e)
-                }
-            }
-            fs = false;
+            if (video.videoWidth <= 0) return;
+            video.style.width = screen.clientWidth;
             canvas.width = video.videoWidth * 0.3;
-            canvas.height = video.videoHeight * 0.2;
-            ctx.drawImage(video, video.videoWidth * 0.3, video.videoHeight * 0.2, video.videoWidth * 0.3, video.videoHeight * 0.2, 0, 0, video.videoWidth * 0.3, video.videoHeight * 0.2);
-            //var image = ctx.getImageData(0, 0, video.videoWidth * 0.3, video.videoHeight * 0.2);
+            if (video.videoHeight <= 0) return;
+            video.style.height = screen.clientHeight;
+            canvas.height = video.videoHeight * 0.3;
+            ctx.drawImage(video, video.videoWidth * 0.35, video.videoHeight * 0.35, video.videoWidth * 0.3, video.videoHeight * 0.3, 0, 0, video.videoWidth * 0.3, video.videoHeight * 0.3);
             const luminanceSource = new HTMLCanvasElementLuminanceSource(canvas);
             const binaryBitmap = new BinaryBitmap(
                 new HybridBinarizer(luminanceSource)
             );
             let result = codeReader.decode(binaryBitmap);
             if (!!result.text) {
-                window.clearInterval(timer);
-                try {
-                    close();
-                }
-                catch (e) {
-                    alert(e);
-                }
+                close();
                 res(result.text);
             }
         }

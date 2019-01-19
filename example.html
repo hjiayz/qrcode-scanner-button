@@ -1,41 +1,43 @@
 <html>
 
 <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="./dist/index.js"></script>
-    <script>
-        function scan(target) {
-            const out = document.getElementById("out");
-            const err = document.getElementById("err");
-            try {
-                window["QrcodeScannerButton"].click().then(res => {
-                    out.innerText = res;
-                })
-                    .catch(e => {
-                        err.innerText = e.toString();
-                    })
-            }
-            catch (e) {
-                err.innerText = e.toString();
-            }
-        }
-    </script>
-
 </head>
 
 <body>
-    <button onclick="scan()">scan</button>
+    <button id="scan">scan</button>
     <div id="out"></div>
     <div id="err"></div>
-    <div id="bind"></div>
+    <div id="handler"></div>
 </body>
 <script>
     try {
         const err = document.getElementById("err");
-        const handler = document.getElementById("bind");
+        const handler = document.getElementById("handler");
         window["QrcodeScannerButton"].bind(handler);
     } catch (e) {
         err.innerText = e.toString();
     }
+    function scan(e) {
+        let target = e.target;
+        const out = document.getElementById("out");
+        const err = document.getElementById("err");
+        try {
+            window["QrcodeScannerButton"].click().then(res => {
+                out.innerText = res;
+            })
+                .catch(e => {
+                    err.innerText = e.toString();
+                })
+        }
+        catch (e) {
+            err.innerText = e.toString();
+        }
+    }
+    const scan_button = document.getElementById("scan");
+    scan_button.addEventListener("click", scan, false);
 </script>
 
 </html>
