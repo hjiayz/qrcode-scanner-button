@@ -18,6 +18,16 @@
                 err.innerText = e.toString();
             }
         }
+        function fullscreen() {
+            let rfs = (screen.requestFullscreen
+                || screen.webkitRequestFullScreen
+                || screen.mozRequestFullScreen
+                || screen.msRequestFullscreen)
+            if (rfs === undefined) {
+                err("requestFullscreen is undefined");
+            }
+            rfs.call(screen)
+        }
     </script>
 
 </head>
@@ -26,7 +36,7 @@
     <button onclick="scan()">scan</button>
     <div id="out"></div>
     <div id="err"></div>
-    <div id="bind"></div>
+    <div id="bind" onclick="fullscreen()"></div>
 </body>
 <script>
     try {
