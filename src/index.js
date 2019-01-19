@@ -25,7 +25,9 @@ function click() {
         var ctx = canvas.getContext("2d");
         let fs = true;
         let computeFrame = () => {
-            if (fs) {
+            if (document.fullscreenElement ||
+                document.mozFullScreenElement ||
+                document.webkitFullscreenElement) {
                 let rfs = (screen.requestFullscreen
                     || screen.webkitRequestFullScreen
                     || screen.mozRequestFullScreen
