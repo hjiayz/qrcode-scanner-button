@@ -13,13 +13,9 @@
     <div id="handler"></div>
 </body>
 <script>
-    try {
-        const err = document.getElementById("err");
-        const handler = document.getElementById("handler");
-        window["QrcodeScannerButton"].bind(handler);
-    } catch (e) {
-        err.innerText = e.toString();
-    }
+    const err = document.getElementById("err");
+    const handler = document.getElementById("handler");
+    window["QrcodeScannerButton"].bind(handler);
     function scan(e) {
         let target = e.target;
         const out = document.getElementById("out");
