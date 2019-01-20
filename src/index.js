@@ -81,7 +81,7 @@ function click() {
             .then(vsrc => {
                 video.srcObject = vsrc;
                 video.play();
-                timer = window.window.setInterval(computeFrame, 100);
+                timer = window.window.setInterval(computeFrame, 150);
             })
             .catch(e => { err(e) });
     })
